@@ -1,24 +1,23 @@
 import { useState } from "react";
 
 import "./styles.css";
+import { NewTodoForm } from "./NewTodoForm";
+import TodoList from "./TodoList";
 
 export default function App() {
-  const [newItem, setNewItem] = useState("");
+  
   const [todos, setTodos] = useState([]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  function addTodo (title) {
     setTodos((currentTodos) => {
       return [
         ...currentTodos,
         
-        { id: crypto.randomUUID(), title: newItem, completed: false },
+        { id: crypto.randomUUID(), title, completed: false },
       ];
     });
-    setNewItem("");
   }
-  
-  
+
   function toogleToDo (id, completed) {
     setTodos (currentTodos => {
       return currentTodos.map(todo => {
@@ -39,41 +38,10 @@ export default function App() {
 
  
   return (
-    <>
+  
       <section className="todoapp">
-        <header className="header">
-          <h1>todos</h1>
-          <form  onSubmit={handleSubmit}>
-            <input
-              id = "001"
-              value={newItem}
-              onChange={(e) => setNewItem(e.target.value)}
-              className="new-todo"
-              placeholder="What needs to be done?"
-              autoFocus
-            />
-          </form>
-        </header>
-        <section className="main">
-          <input className="toggle-all" type="checkbox" />
-          <label htmlFor="">Mark all</label>
-          <ul className="todo-list">
-            {todos.map((todo) => {
-              return (
-                <li key = {todo.id} className= {todo.completed? "completed" : ""}>
-                  <div className="view">
-                    <input className="toggle" type="checkbox"
-                    onChange={e => toogleToDo(todo.id, e.target.checked)} />
-                    <label>{todo.title}</label>
-                    <button className="destroy" 
-                    onClick={() => deleteTodo(todo.id)}></button>
-                  </div>
-                </li>
-              );
-            })}
-            
-          </ul>
-        </section>
+        <NewTodoForm onSubmit={addTodo} />
+        <TodoList todos = {todos}  deleteTodo = {deleteTodo} toogleToDo = {toogleToDo}/>
 
         <footer className="footer">
           <span className="todo-count">
@@ -98,6 +66,6 @@ export default function App() {
           <button className="clear-completed">Clear completed</button>
         </footer>
       </section>
-    </>
+
   );
 }
